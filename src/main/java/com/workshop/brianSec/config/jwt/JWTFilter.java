@@ -1,5 +1,6 @@
 package com.workshop.brianSec.config.jwt;
 
+import com.workshop.brianSec.repository.UserRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,7 +27,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 public class JWTFilter extends OncePerRequestFilter {
 
     @Autowired
-    UserDetailsService userDetailsService;
+    UserRepo userRepo;
     @Autowired
     JWTUtils jwtUtils;
     @Override
@@ -47,7 +48,7 @@ public class JWTFilter extends OncePerRequestFilter {
         jwtToken = authHeader.substring(7);
         userEmail = jwtUtils.extractUsername(jwtToken);
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
+            UserDetails userDetails = userRepo.findUserByEmail(userEmail);
             log.info("UserDetails: ----->{}", userDetails.toString());
             final Boolean isTokenValid = jwtUtils.validateToken(jwtToken, userDetails);
 

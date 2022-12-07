@@ -1,11 +1,10 @@
 package com.workshop.brianSec.repository;
 
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Repository;
 
 import java.util.Collections;
 import java.util.List;
@@ -14,8 +13,7 @@ import java.util.List;
  * @author Brian Barasa
  */
 
-@Component
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Repository
 public class UserRepo {
     public static List<UserDetails> applicationUsers = List.of(
             new User(
@@ -33,4 +31,11 @@ public class UserRepo {
                     )
             )
     );
+
+    public UserDetails findUserByEmail(String email) {
+        return applicationUsers.stream()
+                .filter(u -> u.getUsername().equals(email))
+                .findFirst()
+                .orElseThrow(() ->new UsernameNotFoundException("No user with the provided email found!"));
+    }
 }
