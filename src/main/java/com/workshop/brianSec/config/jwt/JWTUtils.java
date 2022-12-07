@@ -21,8 +21,8 @@ import java.util.function.Function;
 @AllArgsConstructor
 public class JWTUtils {
 
-    @Value("{brianSec.application.jwtSecretKey}")
-    private final String SECRET_KEY;
+//    @Value("{brianSec.application.jwtSecretKey}")
+    private final String SECRET_KEY = "s3cr3t";
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
